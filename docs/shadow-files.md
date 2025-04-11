@@ -48,3 +48,14 @@ When running our password cracker against these files, you'll observe:
 3. **Key Stretching**: bcrypt's adaptable work factor creates significant computational overhead
 
 This project serves as both an offensive security testing tool and an educational demonstration of password security principles.
+
+## Why Common Passwords Matter
+
+The `data/common_passwords.txt` file demonstrates why dictionary attacks are so effective:
+
+- Studies show 10-20 most common passwords cover ~10% of all user accounts
+- 80% of compromises come from the top 5,000 passwords
+- Time to crack a password using a dictionary: seconds to minutes
+- Time to crack the same password with brute force: potentially years
+
+Our demonstration shows how a simple dictionary of just 20 common passwords successfully cracks multiple accounts in the easy shadow file within seconds, highlighting why password education is as important as technical measures.
