@@ -2,7 +2,7 @@
 #define PWCRACKER_RAINBOW_H
 
 #include <stdio.h>
-#include "shadow.h"
+#include "../utils/shadow.h"
 
 /**
  * Perform rainbow table attack on shadow entries
