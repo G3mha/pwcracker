@@ -54,7 +54,7 @@ sudo make install
 
 ## Usage
 
-```
+```code
 Usage: pwcracker [OPTION...] SHADOW_FILE
 Password Hash Cracker -- A security testing framework for password hashing
 
@@ -101,11 +101,12 @@ pwcracker -B
 
 The shadow files follow the standard Linux shadow file format:
 
-```
+```code
 username:$ID$SALT$HASH:UNUSED:FIELDS:CAN:BE:IGNORED
 ```
 
 Where:
+
 - `$ID$` identifies the hash algorithm:
   - `$1$` for MD5
   - `$5$` for SHA-256
