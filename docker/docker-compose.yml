@@ -1,0 +1,14 @@
+services:
+  pwcracker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../:/app
+      - build-data:/app/build
+    command: "--help"
+    tty: true
+    stdin_open: true
+
+volumes:
+  build-data:
