@@ -118,12 +118,6 @@ Where:
 
 This tool is intended for educational purposes and security research only. Usage against systems without explicit permission is illegal and unethical.
 
-## Program Architecture
-
-The program is structured into several modules:
-
-![Program Architecture](docs/img/architecture_diagram.png)
-
 ## License
 
 This project is licensed under the AGPL License - see the LICENSE file for details.
