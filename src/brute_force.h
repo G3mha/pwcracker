@@ -2,7 +2,7 @@
 #define PWCRACKER_BRUTEFORCE_H
 
 #include <stdio.h>
-#include "../utils/shadow.h"
+#include "util.h"
 
 /**
  * Perform brute force attack on shadow entries
