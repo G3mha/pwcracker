@@ -22,10 +22,11 @@ typedef enum {
 /* CLI argument structure */
 struct arguments {
   attack_mode_t mode;
-  char *shadow_file;
+  char *target_file;  /* Shadow file for attack modes, output file for generate mode */
   char *dictionary_file;
   char *rainbow_file;
   char *output_file;
+  char *username_prefix;
   int max_length;
   const char *charset;
   int threads;
