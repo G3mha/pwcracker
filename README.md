@@ -24,16 +24,45 @@ A security testing framework for password hashing techniques and cracking method
   - Demonstrations of salt effectiveness
   - Hash algorithm strength comparisons
 
+## Data Sources
+
+This project uses the following datasets for its dictionary and rainbow table attacks:
+
+- [Bad Password Dataset](https://www.kaggle.com/datasets/kingabzpro/bad-password) - A collection of commonly used and leaked passwords from Kaggle, used for dictionary attacks and rainbow table generation.
+
+For the generation of MD5 rainbow tables for testing, the project uses the online tool from [Unix4Lyfe](https://unix4lyfe.org/crypt/)
+
 ## Building the Project
 
 ### Prerequisites
 
+- Docker (for building the project)
 - CMake 3.22 or higher
 - C compiler with C17 support
 - OpenSSL development libraries
 - Criterion testing framework (for tests)
 
 ### Build Commands
+
+To run the project in a Docker container, use:
+
+```bash
+# Clone the repository
+git clone
+cd pwcracker
+# Build the Docker image
+docker-compose -f docker/docker-compose.yml up -d --remove-orphans
+# Run the Docker container
+docker-compose -f docker/docker-compose.yml run --rm pwcracker --usage
+```
+
+To load a file into the container, use:
+
+```bash
+docker cp $(pwd)/yourfile.txt password-hash-cracker_pwcracker_1:/app/data/
+```
+
+To build the project locally, follow these steps:
 
 ```bash
 # Create a build directory
