@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../src/cli.h"
+#include "../src/util.h"
 
 /* Mock argc and argv for testing */
 static char *create_argv(int *argc, const char *args) {
@@ -74,17 +75,17 @@ static void free_argv(int argc, char **argv) {
 /* Test default values */
 Test(cli, default_values) {
     int argc = 2;
-    char *argv[] = {"pwcracker", "shadow.txt", NULL};
+    char *argv[] = {"pwcracker", SHADOW_FILE, NULL};
     
     struct arguments args = parse_arguments(argc, argv);
     
     cr_assert_eq(args.mode, MODE_DICTIONARY, "Default mode should be dictionary");
-    cr_assert_str_eq(args.shadow_file, "shadow.txt", "Shadow file should be shadow.txt");
-    cr_assert_str_eq(args.dictionary_file, "data/common_passwords.txt", 
-                   "Default dictionary file should be data/common_passwords.txt");
+    cr_assert_str_eq(args.dictionary_file, DICTIONARY_FILE, 
+                   "Default dictionary file should be " DICTIONARY_FILE);
     cr_assert_eq(args.max_length, 8, "Default max length should be 8");
     cr_assert_str_eq(args.charset, "abcdefghijklmnopqrstuvwxyz0123456789", 
                    "Default charset should be lowercase alphanumeric");
+    cr_assert_str_eq(args.target_file, SHADOW_FILE, "Shadow file should be " SHADOW_FILE);
     cr_assert_eq(args.threads, 1, "Default thread count should be 1");
     cr_assert_eq(args.timeout, 0, "Default timeout should be 0");
     cr_assert_eq(args.verbose, 0, "Default verbose flag should be false");
@@ -96,14 +97,13 @@ Test(cli, default_values) {
 /* Test dictionary mode */
 Test(cli, dictionary_mode) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -d wordlist.txt shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -d " DICTIONARY_FILE " " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
-    
     cr_assert_eq(args.mode, MODE_DICTIONARY, "Mode should be dictionary");
-    cr_assert_str_eq(args.shadow_file, "shadow.txt", "Shadow file should be shadow.txt");
-    cr_assert_str_eq(args.dictionary_file, "wordlist.txt", 
-                   "Dictionary file should be wordlist.txt");
+    cr_assert_str_eq(args.target_file, SHADOW_FILE, "Shadow file should be " SHADOW_FILE);
+    cr_assert_str_eq(args.dictionary_file, DICTIONARY_FILE, 
+                   "Dictionary file should be " DICTIONARY_FILE);
     
     free_argv(argc, argv);
 }
@@ -111,12 +111,12 @@ Test(cli, dictionary_mode) {
 /* Test brute force mode */
 Test(cli, bruteforce_mode) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -b -l 4 -c abc shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -b -l 4 -c abc " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     
     cr_assert_eq(args.mode, MODE_BRUTEFORCE, "Mode should be brute force");
-    cr_assert_str_eq(args.shadow_file, "shadow.txt", "Shadow file should be shadow.txt");
+    cr_assert_str_eq(args.target_file, SHADOW_FILE, "Shadow file should be " SHADOW_FILE);
     cr_assert_eq(args.max_length, 4, "Max length should be 4");
     cr_assert_str_eq(args.charset, "abc", "Charset should be abc");
     
@@ -126,14 +126,14 @@ Test(cli, bruteforce_mode) {
 /* Test rainbow mode */
 Test(cli, rainbow_mode) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -r rainbow.txt shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -r " RAINBOW_FILE " " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     
     cr_assert_eq(args.mode, MODE_RAINBOW, "Mode should be rainbow");
-    cr_assert_str_eq(args.shadow_file, "shadow.txt", "Shadow file should be shadow.txt");
-    cr_assert_str_eq(args.rainbow_file, "rainbow.txt", 
-                   "Rainbow file should be rainbow.txt");
+    cr_assert_str_eq(args.target_file, SHADOW_FILE, "Shadow file should be " SHADOW_FILE);
+    cr_assert_str_eq(args.rainbow_file, RAINBOW_FILE, 
+                   "Rainbow file should be " RAINBOW_FILE);
     
     free_argv(argc, argv);
 }
@@ -153,7 +153,7 @@ Test(cli, benchmark_mode) {
 /* Test verbose and quiet modes */
 Test(cli, verbose_quiet_modes) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -v -q shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -v -q " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     
@@ -166,7 +166,7 @@ Test(cli, verbose_quiet_modes) {
 /* Test hash type selection */
 Test(cli, hash_type) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -H md5 shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -H md5 " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     
@@ -178,12 +178,12 @@ Test(cli, hash_type) {
 /* Test output file */
 Test(cli, output_file) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -o results.txt shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -o " OUTPUT_FILE " " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     
-    cr_assert_str_eq(args.output_file, "results.txt", 
-                   "Output file should be results.txt");
+    cr_assert_str_eq(args.output_file, OUTPUT_FILE, 
+                   "Output file should be " OUTPUT_FILE);
     
     free_argv(argc, argv);
 }
@@ -191,7 +191,7 @@ Test(cli, output_file) {
 /* Test threads option */
 Test(cli, threads) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -t 4 shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -t 4 " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     
@@ -203,7 +203,7 @@ Test(cli, threads) {
 /* Test timeout option */
 Test(cli, timeout) {
     int argc;
-    char **argv = (char **)create_argv(&argc, "pwcracker -T 30 shadow.txt");
+    char **argv = (char **)create_argv(&argc, "pwcracker -T 30 " SHADOW_FILE);
     
     struct arguments args = parse_arguments(argc, (char **)argv);
     

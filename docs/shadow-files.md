@@ -26,8 +26,8 @@ Our project includes three sample shadow files with increasing security levels:
 
 ### 3. Hard Shadow File (bcrypt)
 
-- Uses `$2a$12$` prefix with cost factor of 12
-- Implements key stretching with 2^12 iterations
+- Uses `$2a$10$` prefix with cost factor of 10
+- Implements key stretching with 2^10 iterations
 - Specifically designed to be slow (thousands of times slower than SHA-256)
 - Highly resistant to hardware acceleration (GPU attacks)
 - Can take days to years to crack even with sophisticated attacks
