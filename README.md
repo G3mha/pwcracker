@@ -1,6 +1,6 @@
-# Password Hash Cracker
+# pwcracker - Shadow File Cracker
 
-A C-based framework for testing password security techniques and analyzing the effectiveness of different cracking methods.
+A C-based tool for cracking shadow files through dictionary, rainbow table cracking, and brute-force techniques.
 
 ## Overview
 
