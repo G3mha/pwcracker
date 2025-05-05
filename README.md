@@ -109,4 +109,16 @@ The repository includes test data:
 
 ## Security Notice
 
-This tool is for educational purposes only. Unauthorized password cracking is illegal and unethical.
+This tool is intended for educational purposes and security research only. Usage against systems without explicit permission is illegal and unethical.
+
+## License
+
+This project is licensed under the AGPL License - see the LICENSE file for details.
+
+## Test files
+
+The test files used in this project's unitary tests are generate using built-in commands from UNIX, like:
+
+```sh
+md5 -s "<salt><password>" # For MD5
+```
