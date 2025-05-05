@@ -1,160 +1,110 @@
 # Password Hash Cracker
 
-A security testing framework for password hashing techniques and cracking methods. This project is designed for educational purposes to demonstrate various password security concepts.
+A C-based framework for testing password security techniques and analyzing the effectiveness of different cracking methods.
 
-## Features
+## Overview
 
-- **Multiple Attack Methods**:
-  - Dictionary attacks using wordlists
-  - Brute force attacks with configurable character sets
-  - Rainbow table attacks for pre-computed hash lookups
+This educational tool demonstrates password security concepts by implementing:
 
-- **Hash Algorithm Support**:
+- **Attack Methods**
+  - Dictionary attacks
+  - Brute force attacks  
+  - Rainbow table attacks
+
+- **Supported Hash Algorithms**
   - MD5 (`$1$` format)
   - SHA-256 (`$5$` format)
   - bcrypt (`$2a$` format)
 
-- **Performance Features**:
-  - Multi-threaded cracking
-  - Configurable timeout
-  - Benchmark mode for performance testing
+## Getting Started with VS Code Devcontainer
 
-- **Security Demonstrations**:
-  - Sample shadow files of increasing difficulty
-  - Demonstrations of salt effectiveness
-  - Hash algorithm strength comparisons
+The project includes a devcontainer configuration for an isolated, reproducible development environment:
 
-## Data Sources
+1. **Prerequisites**
+   - [VS Code](https://code.visualstudio.com/)
+   - [Docker](https://www.docker.com/)
+   - [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-This project uses the following datasets for its dictionary and rainbow table attacks:
+2. **Setup Steps**
+   ```bash
+   # Clone the repository
+   git clone https://github.com/olincollege/password-hash-cracker.git
+   cd password-hash-cracker
+   
+   # Open in VS Code
+   code .
+   
+   # When prompted, click "Reopen in Container"
+   # Or use Command Palette (F1): "Dev Containers: Reopen in Container"
+   ```
 
-- [Bad Password Dataset](https://www.kaggle.com/datasets/kingabzpro/bad-password) - A collection of commonly used and leaked passwords from Kaggle, used for dictionary attacks and rainbow table generation.
+3. **Building Inside Devcontainer**
+   ```bash
+   mkdir build && cd build
+   cmake ..
+   make
+   ```
 
-For the generation of MD5 rainbow tables for testing, the project uses the online tool from [Unix4Lyfe](https://unix4lyfe.org/crypt/)
+## Running Tests
 
-## Building the Project
-
-### Prerequisites
-
-- Docker (for building the project)
-- CMake 3.22 or higher
-- C compiler with C17 support
-- OpenSSL development libraries
-- Criterion testing framework (for tests)
-
-### Build Commands
-
-To run the project in a Docker container, use:
-
-```bash
-# Clone the repository
-git clone
-cd pwcracker
-# Build the Docker image
-docker-compose -f docker/docker-compose.yml up -d --remove-orphans
-# Run the Docker container
-docker-compose -f docker/docker-compose.yml run --rm pwcracker --usage
-```
-
-To load a file into the container, use:
+The project includes comprehensive tests using the Criterion framework:
 
 ```bash
-docker cp $(pwd)/yourfile.txt password-hash-cracker_pwcracker_1:/app/data/
-```
-
-To build the project locally, follow these steps:
-
-```bash
-# Create a build directory
-mkdir build && cd build
-
-# Configure the project
-cmake ..
-
-# Build the project
-make
-
-# Run tests
+# In the build directory
 make test
 
-# Install the executable
-sudo make install
+# To run specific test
+./test/test_dictionary
+./test/test_brute_force  
+./test/test_rainbow_table
+./test/test_cli
 ```
 
 ## Usage
 
-```code
-Usage: pwcracker [OPTION...] SHADOW_FILE
-Password Hash Cracker -- A security testing framework for password hashing
-
-  -b, --brute-force         Use brute force attack
-  -c, --charset=CHARSET     Character set for brute force (default: abcdefghijklmnopqrstuvwxyz0123456789)
-  -d, --dictionary=FILE     Use dictionary attack with specified wordlist
-  -B, --benchmark           Run in benchmark mode
-  -H, --hash-type=TYPE      Specify hash type (md5, sha256, bcrypt)
-  -l, --max-length=LENGTH   Maximum password length for brute force (default: 8)
-  -o, --output=FILE         Write results to FILE instead of standard output
-  -q, --quiet               Don't produce any output
-  -r, --rainbow=FILE        Use rainbow table attack with specified table
-  -t, --threads=NUM         Number of threads to use (default: 1)
-  -T, --timeout=SECONDS     Timeout in seconds (default: 0 - no timeout)
-  -v, --verbose             Produce verbose output
-  -?, --help                Give this help list
-      --usage               Give a short usage message
-  -V, --version             Print program version
-
-Mandatory or optional arguments to long options are also mandatory or optional
-for any corresponding short options.
-```
-
-### Examples
+The executable provides various options for password cracking:
 
 ```bash
-# Dictionary attack on easy shadow file
-pwcracker -d data/common_passwords.txt data/easy_shadow.txt
+# Dictionary attack example
+./src/pwcracker -d ../data/test_pws.txt ../data/test_hashed_md5.txt
 
-# Brute force attack with limited character set
-pwcracker -b -c abc123 -l 4 data/easy_shadow.txt
+# Brute force attack with custom charset and length
+./src/pwcracker -b -c "abc123" -l 4 ../data/test_hashed_md5.txt
 
-# Verbose dictionary attack with timing information
-pwcracker -v -d data/common_passwords.txt data/medium_shadow.txt
+# Rainbow table attack
+./src/pwcracker -r ../data/test_rainbow_table.txt ../data/test_hashed_md5.txt
+
+# Benchmark mode
+./src/pwcracker -B
 
 # Multi-threaded attack with timeout
-pwcracker -d data/common_passwords.txt -t 4 -T 30 data/hard_shadow.txt
-
-# Benchmark hash functions
-pwcracker -B
+./src/pwcracker -d ../data/test_pws.txt -t 4 -T 30 ../data/test_hashed_sha256.txt
 ```
 
-## Shadow File Format
+### Command Options
 
-The shadow files follow the standard Linux shadow file format:
-
-```code
-username:$ID$SALT$HASH:UNUSED:FIELDS:CAN:BE:IGNORED
+```
+-b, --brute-force         Use brute force attack
+-c, --charset=CHARSET     Character set for brute force
+-d, --dictionary=FILE     Use dictionary attack with specified wordlist
+-B, --benchmark           Run in benchmark mode
+-H, --hash-type=TYPE      Specify hash type (md5, sha256, bcrypt)
+-l, --max-length=LENGTH   Maximum password length for brute force
+-o, --output=FILE         Write results to FILE
+-t, --threads=NUM         Number of threads to use
+-T, --timeout=SECONDS     Timeout in seconds
+-v, --verbose             Produce verbose output
 ```
 
-Where:
+## Test Data
 
-- `$ID$` identifies the hash algorithm:
-  - `$1$` for MD5
-  - `$5$` for SHA-256
-  - `$2a$` for bcrypt
-- `SALT` is the cryptographic salt
-- `HASH` is the hashed password value
+The repository includes test data:
+- `data/test_pws.txt`: Common passwords for dictionary attacks
+- `data/test_hashed_md5.txt`: MD5-hashed passwords
+- `data/test_hashed_sha256.txt`: SHA-256 hashed passwords
+- `data/test_hashed_bcrypt.txt`: bcrypt hashed passwords
+- `data/test_rainbow_table.txt`: Sample rainbow table
 
 ## Security Notice
 
-This tool is intended for educational purposes and security research only. Usage against systems without explicit permission is illegal and unethical.
-
-## License
-
-This project is licensed under the AGPL License - see the LICENSE file for details.
-
-## Test files
-
-The test files used in this project's unitary tests are generate using built-in commands from UNIX, like:
-
-```sh
-md5 -s "<salt><password>" # For MD5
-```
+This tool is for educational purposes only. Unauthorized password cracking is illegal and unethical.
