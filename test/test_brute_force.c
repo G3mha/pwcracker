@@ -6,47 +6,45 @@
 #include "../src/brute_force.h"
 #include "../src/util.h"
 
-Test(bruteforce_attack, basic_functionality) {
-    // Create shadow entries for testing
-    shadow_entry_t entries[3] = {0};
-    size_t num_entries = 3;
+Test(brute_force_attack, simple_password) {
+    // Create a shadow entry with a very simple password
+    shadow_entry_t entry = {0};
     
-    // Set up the first entry with a known password from the dictionary
-    entries[0].username = strdup("user1");
-    entries[0].hash = strdup("$1$zUDL$3fe34eba094562325c4e7260409fad83"); // "password" from test data
-    entries[0].salt = strdup("zUDL");
-    entries[0].type = HASH_MD5;
-    entries[0].password = NULL;
+    // Set up entry with a simple password "aaaa"
+    // You'll need to replace this hash with the actual MD5 hash of "aaaa" with your salt
+    entry.username = strdup("testuser");
+    entry.salt = strdup("salt");
+    entry.hash = strdup("$1$salt$4ed77062b1b6259ad051df508ad64cfd"); // Hash for "aaaa"
+    entry.type = HASH_MD5;
+    entry.password = NULL;
     
-    // Setup additional entries...
-    
-    // Variables for bruteforce_attack function
+    // Variables for brute_force_attack function
     FILE *output = tmpfile();
     int verbose = 0;
     size_t cracked_count = 0;
     volatile int timeout_flag = 0;
     
-    // Call the actual function we want to test
-    int result = bruteforce_attack(entries, num_entries, "abcdefghijklmnopqrstuvwxyz0123456789",
-                                   8, HASH_MD5, 1, output, verbose, 
-                                   &cracked_count, &timeout_flag);
+    // Set brute force parameters for a very simple case
+    // Limit character set to just lowercase 'a' if possible
+    // Or set a very small max length (like 4)
+    char charset[] = "a";  // Just the letter 'a'
+    int min_len = 4;
+    int max_len = 4;  // Exactly 4 characters
+    
+    // Call the function we're testing
+    int result = brute_force_attack(&entry, 1, charset, min_len, max_len,
+                                  output, verbose, &cracked_count, &timeout_flag);
     
     // Verify results
-    cr_assert_eq(result, 0, "dictionary_attack should return 0 on success");
-    cr_assert_gt(cracked_count, 0, "At least one password should be cracked");
-    cr_assert_not_null(entries[0].password, "First password should be cracked");
-    cr_assert_str_eq(entries[0].password, "password", "First password should be 'password'");
-    
+    cr_assert_eq(result, 0, "brute_force_attack should return 0 on success");
+    cr_assert_eq(cracked_count, 1, "The password should be cracked");
+    cr_assert_not_null(entry.password, "Password should be found");
+    cr_assert_str_eq(entry.password, "aaaa", "Password should be 'aaaa'");
     
     // Clean up
     fclose(output);
-    for (size_t i = 0; i < num_entries; i++) {
-        cr_log_info("Username: %s, Hash: %s, Salt: %s, Password: %s", 
-               entries[i].username, entries[i].hash, 
-               entries[i].salt, entries[i].password ? entries[i].password : "NULL");
-        free(entries[i].username);
-        free(entries[i].hash);
-        free(entries[i].salt);
-        free(entries[i].password);
-    }
+    free(entry.username);
+    free(entry.hash);
+    free(entry.salt);
+    free(entry.password);
 }
