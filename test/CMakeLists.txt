@@ -15,10 +15,15 @@ add_executable(test_dictionary test_dictionary.c)
 target_link_libraries(test_dictionary PRIVATE crypto criterion)
 add_test(NAME test_dictionary COMMAND test_dictionary ${CRITERION_FLAGS})
 
-# Dictionary test
+# Brute force test
 add_executable(test_brute_force test_brute_force.c)
 target_link_libraries(test_brute_force PRIVATE crypto criterion)
 add_test(NAME test_brute_force COMMAND test_brute_force ${CRITERION_FLAGS})
+
+# Rainbow table test
+add_executable(test_rainbow_table test_rainbow_table.c)
+target_link_libraries(test_rainbow_table PRIVATE crypto criterion)
+add_test(NAME test_rainbow_table COMMAND test_rainbow_table ${CRITERION_FLAGS})
 
 # Create test data directory in build directory
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/data)
