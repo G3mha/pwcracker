@@ -44,7 +44,7 @@ The project includes a devcontainer configuration for an isolated, reproducible 
    ```bash
    mkdir build && cd build
    cmake ..
-   make
+   make clean; make
    ```
 
 ## Running Tests
@@ -53,7 +53,7 @@ The project includes comprehensive tests using the Criterion framework:
 
 ```bash
 # In the build directory
-make test
+ctest --output-on-failure
 
 # To run specific test
 ./test/test_dictionary
