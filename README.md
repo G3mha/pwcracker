@@ -16,6 +16,8 @@ This educational tool demonstrates password security concepts by implementing:
   - SHA-256 (`$5$` format)
   - bcrypt (`$2a$` format)
 
+To understand more about shadow files in the context of this project, go to [Shadow Files](./docs/shadow-files.md).
+
 ## Getting Started with VS Code Devcontainer
 
 The project includes a devcontainer configuration for an isolated, reproducible development environment:
