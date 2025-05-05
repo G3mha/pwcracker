@@ -14,8 +14,8 @@ Test(rainbow_table_attack, basic_functionality) {
     // Set up the entry with a known password
     entry.username = strdup("user1");
     entry.hash = strdup("$1$zUDL$3fe34eba094562325c4e7260409fad83"); // "password" from test data
-    entry.salt = strdup("zUDL");
-    entry.type = HASH_MD5;
+    entry.type = detect_hash_type(&entry);  // Detect type from hash
+    entry.salt = extract_salt(&entry);      // Extract salt properly
     entry.password = NULL;
     
     // Variables for rainbow_attack function
@@ -40,8 +40,8 @@ Test(rainbow_table_attack, basic_functionality) {
     
     // Clean up
     fclose(output);
-    free(entry.username);
-    free(entry.hash);
-    free(entry.salt);
-    free(entry.password);
+    if (entry.username) free(entry.username);
+    if (entry.hash) free(entry.hash);
+    if (entry.salt) free(entry.salt);
+    if (entry.password) free(entry.password);    
 }
