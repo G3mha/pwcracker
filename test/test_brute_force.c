@@ -30,10 +30,9 @@ Test(brute_force_attack, simple_password) {
     char charset[] = "a";  // Just the letter 'a'
     int min_len = 4;
     int max_len = 4;  // Exactly 4 characters
-    
-    // Call the function we're testing
-    int result = brute_force_attack(&entry, 1, charset, min_len, max_len,
-                                  output, verbose, &cracked_count, &timeout_flag);
+
+    int result = bruteforce_attack(&entry, 1, charset, max_len, entry.type, 
+                                   1, output, verbose, &cracked_count, &timeout_flag);    
     
     // Verify results
     cr_assert_eq(result, 0, "brute_force_attack should return 0 on success");
