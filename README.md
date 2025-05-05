@@ -30,8 +30,8 @@ The project includes a devcontainer configuration for an isolated, reproducible 
 2. **Setup Steps**
    ```bash
    # Clone the repository
-   git clone https://github.com/olincollege/password-hash-cracker.git
-   cd password-hash-cracker
+   git clone https://github.com/G3mha/pwcracker.git
+   cd pwcracker
    
    # Open in VS Code
    code .
