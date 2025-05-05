@@ -70,8 +70,12 @@ int rainbow_attack(shadow_entry_t *entries, size_t num_entries,
             continue;
         }
         
+        /* Make a copy of the line before tokenizing */
+        char line_copy[MAX_LINE_LENGTH];
+        strcpy(line_copy, line);
+        
         /* Parse line (format: hash:password) */
-        char *hash = strtok(line, ":");
+        char *hash = strtok(line_copy, ":");
         if (!hash) {
             continue;
         }
@@ -113,8 +117,8 @@ int rainbow_attack(shadow_entry_t *entries, size_t num_entries,
         
         /* Look for match in rainbow table */
         for (size_t j = 0; j < entry_count; j++) {
-            /* Match hash */
-            if (strstr(entry->hash, rainbow[j].hash) != NULL) {
+            /* Check if the password is already cracked */
+            if (strcmp(entry->hash, rainbow[j].hash) == 0) { /* Hash match */
                 /* Verify password */
                 if (check_password(entry, rainbow[j].password)) {
                     entry->password = strdup(rainbow[j].password);
